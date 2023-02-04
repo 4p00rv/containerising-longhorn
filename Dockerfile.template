@@ -1,0 +1,39 @@
+FROM $ALPINE_VERSION as base
+RUN apk add --no-cache open-iscsi bash flock openrc
+RUN rm /etc/mtab
+#RUN which open-iscsi && which bash && which flock
+# /etc/iscsi
+# /lib/
+# /usr/lib
+# /usr/sbin/iscsi*
+
+FROM rancher/k3s:$K3S_VERSION
+COPY --from=base /etc/iscsi /etc/iscsi
+COPY --from=base /etc/init.d/iscsid /etc/init.d/iscsid
+COPY --from=base /etc/conf.d/iscsid /etc/conf.d/iscsid
+COPY --from=base /usr/sbin/* /usr/sbin/
+COPY --from=base /lib/* /lib/
+COPY --from=base /usr/lib/* /usr/lib/
+COPY --from=base /bin/bash /bin/bash
+COPY --from=base /usr/lib/bash /usr/lib/bash
+COPY --from=base /usr/bin/flock /bin/flock
+COPY --from=base /sbin/rc* /sbin/
+COPY --from=base /sbin/rc /sbin/
+COPY --from=base /etc/* /etc/
+COPY --from=base /bin/rc-status /bin/
+# COPY --from=base /etc/init.d /etc/init.d
+# COPY --from=base /usr/lib /usr/lib
+# COPY --from=base /etc/iscsi /etc/iscsi
+# COPY --from=base /usr/sbin/iscsi* /sbin/iscsi* /usr/sbin/
+# COPY --from=base /usr/bin/flock /bin/flock
+# COPY --from=base /bin/bash /bin/bash
+# COPY --from=base /lib /lib
+# COPY --from=base /usr/share/apk /usr/share/apk
+# COPY --from=base /usr/sbin /sbin
+# COPY --from=base /usr/sbin /usr/sbin
+# COPY --from=base /var/lib/apk /var/lib/apk
+# COPY --from=base /etc/apk /etc/apk
+# COPY --from=base /var/cache/apk /var/cache/apk
+# RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.17/main open-iscsi bash flock
+RUN ln -s /bin/aux/mount /bin/mount && \
+    mkdir -p /run/lock

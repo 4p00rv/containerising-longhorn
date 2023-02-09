@@ -1,0 +1,13 @@
+FROM ubuntu:22.04
+
+RUN apt-get update
+RUN apt-get install -y ca-certificates bash open-iscsi tar zstd systemctl curl
+RUN  curl -sfL https://get.k3s.io | INSTALL_K3S_SKIP_START=true INSTALL_K3S_SKIP_ENABLE=true INSTALL_K3S_BIN_DIR=/bin sh -
+VOLUME /var/lib/kubelet
+VOLUME /var/lib/rancher/k3s
+VOLUME /var/lib/cni
+VOLUME /var/log
+ENV PATH="$PATH:/bin/aux"
+ENV CRI_CONFIG_FILE="/var/lib/rancher/k3s/agent/etc/crictl.yaml"
+ENTRYPOINT ["/bin/k3s"]
+CMD ["agent"]

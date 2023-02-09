@@ -1,3 +1,11 @@
+# Checklist of tasks
+
+-[x] Modify the base k3s image to support iscsi command
+-[x] Add bash and flock to the modified image
+-[x] Try ubuntu base image with k3s and see if it works in container
+-[ ] One option is to run k3s in a vm and compare to container. Debug logs can help with digging it deeper.
+
+
 # So far
 
 iscsi is installed. The kernel module error are fixed using `--cap-add` in docker
@@ -34,5 +42,4 @@ iscsid: sendmsg: bug? ctrl_fd 4
 
 Source code for open-iscsi is here: https://github.com/open-iscsi/open-iscsi
 
-One option is to run k3s in a vm and compare to container. Debug logs can help with digging it deeper.
 
